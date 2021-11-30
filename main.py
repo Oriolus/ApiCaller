@@ -12,7 +12,7 @@ from StateMachine import State, StateMachine
 #     , attempt_count=0
 # )
 
-conn_string = 'C:\\Users\\User\\PycharmProjects\\SinglePageApiLoader\\loader.db'
+conn_string = 'C:\\Users\\User\\PycharmProjects\\ApiCaller\\loader.db'
 
 exists_state_uid = 'urn:uuid:06f18e09-24f8-4aa3-a710-eb27203e0e9b'
 
@@ -28,6 +28,6 @@ with SQLiteStateMachineDao(conn_string) as dao:  # type: SQLiteStateMachineDao
 
         loaded = loader.load()
 
-        print(loaded)
+        print(loaded.result.text)
 
 
