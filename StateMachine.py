@@ -1,4 +1,5 @@
 import uuid
+import copy
 from typing import Optional
 from datetime import datetime, timezone
 
@@ -131,7 +132,7 @@ class StateMachine:
         assert obj
         assert obj.state is None
 
-        saved = obj
+        saved = copy.deepcopy(obj)
 
         obj.state = State.CREATED
         obj.version = 1
@@ -143,7 +144,7 @@ class StateMachine:
             obj = self.__dao.update(obj)
         except Exception as e:
             obj = saved
-            # todo:
+            raise e
 
         return obj
 
@@ -151,7 +152,7 @@ class StateMachine:
         assert obj
         assert obj.state == State.CREATED
 
-        last_obj = obj
+        last_obj = copy.deepcopy(obj)
 
         obj.state = State.PROCESSING
         obj.attempt_count += 1
@@ -161,7 +162,7 @@ class StateMachine:
             self.__dao.update(obj)
         except Exception as e:
             obj = last_obj
-            pass
+            raise e
 
         return obj
 
@@ -169,7 +170,7 @@ class StateMachine:
         assert obj is not None
         assert obj.state == State.PROCESSING
 
-        last_obj = obj  # todo: скопировать объект, а не ссылку!
+        last_obj = copy.deepcopy(obj)
 
         if obj.error is not None:
             obj.state = State.FAILED
@@ -183,6 +184,6 @@ class StateMachine:
             obj = self.__dao.update(obj)
         except Exception as e:
             obj = last_obj
-            pass  # todo:
+            raise e
 
         return obj

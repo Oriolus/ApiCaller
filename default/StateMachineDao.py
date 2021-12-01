@@ -136,8 +136,7 @@ where
             'uid': str(uid)
         }
         cursor = self.__connection.execute(sql, args)
-        if cursor.rowcount == 0:
-            return None
+
         row = cursor.fetchone()
 
         state = State(
@@ -171,13 +170,14 @@ from
     "resource"
 where
     "state" = :created_state
-    or
-    (
-        "state" = :failed_state
-        and
-        attempt_count < :max_attempt_count
-    )
 '''
+        # or
+        # (
+        #     "state" =:failed_state
+        # and
+        # attempt_count <:max_attempt_count
+        # )
+
         args = {
             'created_state': State.CREATED,
             'failed_state': State.FAILED,
@@ -185,8 +185,7 @@ where
         }
 
         cursor = self.__connection.execute(sql, args)
-        # if cursor.rowcount <= 0:
-        #     return None
+
         row = cursor.fetchone()
         state = State(
             uuid.UUID(row[0])

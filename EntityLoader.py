@@ -148,6 +148,7 @@ class EntityLoader:
                 return load_result
 
             except Exception as e:
+                print(str(e))
                 load_context.LoadObject.error = str(e)
                 # warning: passing here after falling in __state_machine.to_processing ....
                 self.__state_machine.change_state(load_context.LoadObject)
